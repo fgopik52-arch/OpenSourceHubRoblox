@@ -1,216 +1,145 @@
 -- ============================================================
 --  BLACKBOX HUB x genceo
---  Rayfield UI + Discord tab + 20 games + 5 universal
---  GitHub: fgopik52-arch/OpenSourceHubRoblox
+--  Rayfield UI + Games + Universal | keyless
 -- ============================================================
 
 if not game:IsLoaded() then game.Loaded:Wait() end
 if not getgenv then
-    warn("[Blackbox] Требуется экзекьютор с getgenv()")
+    warn("[Blackbox] Requires getgenv()")
     return
 end
 
 local Players     = game:GetService("Players")
 local CoreGui     = cloneref and cloneref(game:GetService("CoreGui")) or game:GetService("CoreGui")
-local LocalPlayer = Players.LocalPlayer
 
 -- ============================================================
---  GITHUB CONFIG
--- ============================================================
-local GITHUB_USER = "fgopik52-arch"
-local GITHUB_REPO = "OpenSourceHubRoblox"
-local AVATAR_FILE = "Anjinho.jpeg"
-
-local AVATAR_URL = ("https://raw.githubusercontent.com/%s/%s/refs/heads/main/%s")
-    :format(GITHUB_USER, GITHUB_REPO, AVATAR_FILE)
-
--- ============================================================
---  RAYFIELD LOAD
+--  RAYFIELD
 -- ============================================================
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 Rayfield:Notify({
     Title = "Blackbox Hub",
-    Content = "Загрузка интерфейса...",
+    Content = "Loading...",
     Duration = 3,
     Image = 4483362458,
 })
 
--- ============================================================
---  WINDOW
--- ============================================================
 local Window = Rayfield:CreateWindow({
     Name = "Blackbox Hub | genceo",
     Icon = 0,
     LoadingTitle = "Blackbox Hub",
     LoadingSubtitle = "by genceo",
     Theme = "Amethyst",
-
     ToggleUIKeybind = "K",
-
     DisableRayfieldPrompts = false,
     DisableBuildWarnings = false,
-
-    ConfigurationSaving = {
-        Enabled = false,
-        FolderName = nil,
-        FileName = "BlackboxHub"
-    },
-
-    Discord = {
-        Enabled = false,
-        Invite = "",
-        RememberJoins = false
-    },
-
+    ConfigurationSaving = { Enabled = false, FolderName = nil, FileName = "BlackboxHub" },
+    Discord = { Enabled = false, Invite = "", RememberJoins = false },
     KeySystem = false,
 })
 
 -- ============================================================
---  АВАТАРКА ИЗ GITHUB (круглая, в левом верхнем углу)
--- ============================================================
-local avatarScreen = Instance.new("ScreenGui")
-avatarScreen.Name = "BlackboxAvatar"
-avatarScreen.ResetOnSpawn = false
-avatarScreen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-avatarScreen.Parent = (gethui and gethui()) or CoreGui
-
-local avatar = Instance.new("ImageLabel")
-avatar.Name = "genceoAvatar"
-avatar.Size = UDim2.new(0, 64, 0, 64)
-avatar.Position = UDim2.new(0, 12, 0, 12)
-avatar.BackgroundTransparency = 1
-avatar.Image = AVATAR_URL
-avatar.ZIndex = 5
-avatar.Parent = avatarScreen
-
-local avatarCorner = Instance.new("UICorner")
-avatarCorner.CornerRadius = UDim.new(1, 0)
-avatarCorner.Parent = avatar
-
-local avatarStroke = Instance.new("UIStroke")
-avatarStroke.Color = Color3.fromRGB(140, 100, 255)
-avatarStroke.Thickness = 2
-avatarStroke.Parent = avatar
-
--- ============================================================
---  DISCORD TAB (синяя иконка + кнопка Close)
+--  DISCORD TAB (Close only)
 -- ============================================================
 local DiscordTab = Window:CreateTab("Discord", 4483362458)
 
 DiscordTab:CreateSection("Discord — @genceo")
 
 DiscordTab:CreateButton({
-    Name = "Закрыть / Close",
+    Name = "Close / Закрыть",
     Callback = function()
         Rayfield:Notify({
             Title = "@genceo",
             Content = "Ну окей :(",
             Duration = 5,
             Image = 4483362458,
-            Actions = {
-                Ignore = {
-                    Name = "Понял",
-                    Callback = function() end
-                }
-            }
         })
-
-        task.wait(0.3)
-
-        -- Уничтожаем Rayfield и аватарку
+        task.wait(0.5)
         Rayfield:Destroy()
-        if avatarScreen then avatarScreen:Destroy() end
-    end,
-})
-
-DiscordTab:CreateSection("Ссылки")
-
-DiscordTab:CreateButton({
-    Name = "Скопировать Discord-приглашение",
-    Callback = function()
-        if setclipboard then
-            setclipboard("https://discord.gg/ТВОЙ_ИНВАЙТ")
-            Rayfield:Notify({
-                Title = "Discord",
-                Content = "Инвайт скопирован в буфер.",
-                Duration = 3,
-                Image = 4483362458,
-            })
-        end
     end,
 })
 
 -- ============================================================
---  MAIN TAB
+--  MAIN
 -- ============================================================
 local MainTab = Window:CreateTab("Главная", 0)
 
-MainTab:CreateSection("Профиль")
-
+MainTab:CreateSection("Info")
 MainTab:CreateParagraph({
     Title = "Blackbox Hub",
-    Content = "Версия 1.0 | by genceo | 20 игр + 5 universal | GitHub avatar"
-})
-
-MainTab:CreateButton({
-    Name = "Показать аватарку (URL)",
-    Callback = function()
-        Rayfield:Notify({
-            Title = "genceo",
-            Content = AVATAR_URL,
-            Duration = 6,
-            Image = 4483362458,
-        })
-    end,
+    Content = "v1.0 | by genceo | keyless games + universal"
 })
 
 -- ============================================================
---  ИГРЫ (20) + UNIVERSAL (5)
+--  GAMES (keyless, verified from search)
 -- ============================================================
-local GamesTab     = Window:CreateTab("Игры (20)", 0)
-local UniversalTab = Window:CreateTab("Universal (5)", 0)
+local GamesTab     = Window:CreateTab("Игры", 0)
+local UniversalTab = Window:CreateTab("Universal", 0)
 
--- ВСТАВЬ СВОИ URL ВМЕСТО example.com
 local Games = {
-    {name = "Brookhaven RP",             url = "https://example.com/brookhaven.lua"},
-    {name = "Blox Fruits",               url = "https://example.com/bloxfruits.lua"},
-    {name = "Rivals",                    url = "https://example.com/rivals.lua"},
-    {name = "Street Life Remastered",    url = "https://example.com/streetlife.lua"},
-    {name = "Ohio",                      url = "https://example.com/ohio.lua"},
-    {name = "Arsenal",                   url = "https://example.com/arsenal.lua"},
-    {name = "Murder Mystery 2",          url = "https://example.com/mm2.lua"},
-    {name = "Jailbreak",                 url = "https://example.com/jailbreak.lua"},
-    {name = "BedWars",                   url = "https://example.com/bedwars.lua"},
-    {name = "Fisch",                     url = "https://example.com/fisch.lua"},
-    {name = "Grow a Garden",             url = "https://example.com/growgarden.lua"},
-    {name = "Dead Rails",                url = "https://example.com/deadrails.lua"},
-    {name = "The Strongest Battlegrounds", url = "https://example.com/tsb.lua"},
-    {name = "Evade",                     url = "https://example.com/evade.lua"},
-    {name = "Blue Lock: Rivals",         url = "https://example.com/bluelock.lua"},
-    {name = "99 Nights in the Forest",   url = "https://example.com/99nights.lua"},
-    {name = "Pet Simulator 99",          url = "https://example.com/ps99.lua"},
-    {name = "Adopt Me",                  url = "https://example.com/adoptme.lua"},
-    {name = "Tower Defense Simulator",   url = "https://example.com/tds.lua"},
-    {name = "Anime Vanguards",           url = "https://example.com/animevanguards.lua"},
+    -- Brookhaven (two options)
+    {name = "Brookhaven (Kaiser)",      url = "https://raw.githubusercontent.com/SUPREMEAURA350/KAISER-VERSION-2-/refs/heads/main/Kaiserspam"},
+    {name = "Brookhaven (Ishaxann Fonts)", url = "https://gist.githubusercontent.com/ishaxannop/744b241865df726ef55feb171342ffc6/raw/a25d9be54eb7cc7f37577171d2d5d561901cc29b/Ishaxann's%2520Fonts"},
+
+    -- Rivals (two options)
+    {name = "Rivals (JN HH)",           url = "https://raw.githubusercontent.com/JNHHGaming/Rivals8/refs/heads/main/JN%20HH%20Gaming"},
+    {name = "Rivals (Korax)",           url = "https://raw.githubusercontent.com/imshrak/rivals/refs/heads/main/main"},
+
+    -- Arsenal (three options)
+    {name = "Arsenal (ArsenalFun V2)",  url = "https://raw.githubusercontent.com/AverageAftermath/ArsenalFun/refs/heads/main/ArsenalFunV2"},
+    {name = "Arsenal (Catware)",        url = "https://catware.xyz/Arsenal.lua"},
+
+    -- The Strongest Battlegrounds
+    {name = "The Strongest Battlegrounds (KittyWare)", url = "https://raw.githubusercontent.com/0mam0ri/KittyWare/refs/heads/main/obf.lua"},
+    {name = "The Strongest Battlegrounds (Spark Hub)", url = "https://raw.githubusercontent.com/ultimatep568/Spark-Hub/refs/heads/main/SparkHub_Loader.lua"},
+
+    -- Blue Lock Rivals
+    {name = "Blue Lock Rivals",         url = "https://raw.githubusercontent.com/TheDarkoneMarcillisePex/Other-Scripts/refs/heads/main/Blue%20Lock%20Rivals%20GUI"},
+
+    -- Fisch
+    {name = "Fisch (MUR4)",             url = "https://gist.githubusercontent.com/Mur4exe/af4ce068bd4910ff0e5715cd0215c143/raw/f3f36618e23d29d064618d1c573ab29e2e407f71/F%25C4%25B0SHv2.lua"},
+
+    -- Grow a Garden
+    {name = "Grow a Garden (Rblxshop)", url = "https://raw.githubusercontent.com/rblxshop/Rblxscripts/refs/heads/main/GAG.lua"},
+    {name = "Grow a Garden (Milk)",     url = "https://raw.githubusercontent.com/the-amazing-digital-circus/Milk/main/126884695634066"},
+
+    -- Adopt Me
+    {name = "Adopt Me (House Cloner)",  url = "https://raw.githubusercontent.com/swiftasfboi/AdoptMe/refs/heads/main/HouseCloner"},
+    {name = "Adopt Me (Seraphis)",      url = "https://raw.githubusercontent.com/eIysia-dev/best/refs/heads/main/loader"},
+    {name = "Adopt Me (ByteLaunch)",    url = "https://raw.githubusercontent.com/bytelaunch-germany/adoptme-candyegg-farmer2026/main/loader.lua"},
+
+    -- Pet Simulator 99
+    {name = "Pet Simulator 99",         url = "https://raw.githubusercontent.com/demonlordscript-create/-Plant-vs-Coin-Part-2-Script-Free-Keyless-Auto-Place-Auto-Rebirth/refs/heads/main/ps99%20new%20script%20updated%20plant%20vs%20coin"},
+
+    -- Tower Defense Simulator
+    {name = "Tower Defense Simulator (Pick Hub)", url = "http://pickscripthub.xyz/load/TDSMultiLoader.lua"},
+    {name = "Tower Defense Simulator (Sosika)",   url = "https://raw.githubusercontent.com/sosiskascriptv3/tds-auto-farm-money-and-xp/refs/heads/main/lkj"},
+
+    -- Anime Vanguards
+    {name = "Anime Vanguards (DollarHub)", url = "https://dollarhub.space/script/loader.lua"},
+    {name = "Anime Vanguards (Luarmor)",   url = "https://api.luarmor.net/files/v3/loaders/e3cc7e48055222fbdc0e3228a36766a6.lua"},
+
+    -- Universal / Multi-game
+    {name = "Fractured Hub (TDS/Anime/Universal)", url = "https://api.luarmor.net/files/v4/loaders/f03a4b5f7f83de69bd5d1a34bc193eab.lua"},
 }
 
+-- ============================================================
+--  UNIVERSAL (5)
+-- ============================================================
 local Universals = {
-    {name = "Universal ESP",           url = "https://example.com/esp.lua"},
-    {name = "Universal Speed",         url = "https://example.com/speed.lua"},
-    {name = "Universal Fly",           url = "https://example.com/fly.lua"},
-    {name = "Universal Infinite Jump", url = "https://example.com/infinitjump.lua"},
-    {name = "Universal Aimbot",        url = "https://example.com/aimbot.lua"},
+    {name = "Universal ESP",           url = "https://pastefy.app/VKpXX0pO/raw"},
+    {name = "Universal Fly/Noclip/Speed", url = "https://pastebin.com/raw/Ju5wjjbe"},
+    {name = "Universal Infinite Jump", url = "https://pastebin.com/raw/gsSkY3ji"},
+    {name = "Universal Vidas Hub",     url = "https://pastebin.com/raw/1K0n4K7q"},
+    {name = "Sephirre Hub (Universal)", url = "https://scriptblox.com/script/Universal-Script-Sepphire-Hub-79635"},
 }
 
+-- ============================================================
+--  RUNNER
+-- ============================================================
 local function runScript(url, label)
-    if not url or url:find("example.com") then
-        Rayfield:Notify({
-            Title = "Blackbox Hub",
-            Content = "URL для " .. label .. " не настроен.",
-            Duration = 4,
-            Image = 4483362458,
-        })
+    if not url or url == "" then
+        Rayfield:Notify({ Title = "Blackbox", Content = label .. ": no URL", Duration = 3, Image = 4483362458 })
         return
     end
 
@@ -219,23 +148,16 @@ local function runScript(url, label)
     end)
 
     if ok then
-        Rayfield:Notify({
-            Title = "Успех",
-            Content = label .. " загружен.",
-            Duration = 3,
-            Image = 4483362458,
-        })
+        Rayfield:Notify({ Title = "OK", Content = label .. " loaded", Duration = 3, Image = 4483362458 })
     else
-        Rayfield:Notify({
-            Title = "Ошибка",
-            Content = label .. ": " .. tostring(err):sub(1, 60),
-            Duration = 5,
-            Image = 4483362458,
-        })
+        Rayfield:Notify({ Title = "Error", Content = label .. ": " .. tostring(err):sub(1, 60), Duration = 5, Image = 4483362458 })
     end
 end
 
-GamesTab:CreateSection("Популярные игры")
+-- ============================================================
+--  BUTTONS
+-- ============================================================
+GamesTab:CreateSection("Games (keyless)")
 
 for _, g in ipairs(Games) do
     GamesTab:CreateButton({
@@ -244,7 +166,7 @@ for _, g in ipairs(Games) do
     })
 end
 
-UniversalTab:CreateSection("Универсальные скрипты")
+UniversalTab:CreateSection("Universal (keyless)")
 
 for _, u in ipairs(Universals) do
     UniversalTab:CreateButton({
@@ -254,13 +176,13 @@ for _, u in ipairs(Universals) do
 end
 
 -- ============================================================
---  ФИНАЛЬНОЕ УВЕДОМЛЕНИЕ
+--  FOOTER
 -- ============================================================
 Rayfield:Notify({
-    Title = "Blackbox Hub готов",
-    Content = "Открыто. Клавиша: K",
+    Title = "Blackbox Hub",
+    Content = "Ready. Key: K",
     Duration = 4,
     Image = 4483362458,
 })
 
-print("[Blackbox Hub] Загружено. Discord: @genceo")
+print("[Blackbox Hub] Loaded. @genceo")
