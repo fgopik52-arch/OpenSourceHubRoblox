@@ -19,7 +19,7 @@ local LocalPlayer = Players.LocalPlayer
 -- ============================================================
 local GITHUB_USER = "fgopik52-arch"
 local GITHUB_REPO = "OpenSourceHubRoblox"
-local AVATAR_FILE = "genceo.png"
+local AVATAR_FILE = "Anjinho.jpeg"
 
 local AVATAR_URL = ("https://raw.githubusercontent.com/%s/%s/refs/heads/main/%s")
     :format(GITHUB_USER, GITHUB_REPO, AVATAR_FILE)
